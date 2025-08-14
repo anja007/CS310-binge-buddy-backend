@@ -8,3 +8,12 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+
+app.get('/', (req, res) => {
+    res.send('Running...');
+});
+
+const authRoutes = require('./routes/authRoutes');
+app.use('/api/auth', authRoutes);
+
+app.listen(port, () => console.log(`Server running on port ${port}`));
