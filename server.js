@@ -25,4 +25,7 @@ app.use('/api', moviesRoutes);
 const detailsRoutes = require('./routes/detailsRoutes');
 app.use('/api/details', detailsRoutes);
 
+const contentRoutes = require('./routes/contentRoutes');
+app.use('/api/content', contentRoutes);
+
 app.listen(port, () => console.log(`Server running on port ${port}`));
