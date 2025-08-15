@@ -16,4 +16,13 @@ app.get('/', (req, res) => {
 const authRoutes = require('./routes/authRoutes');
 app.use('/api/auth', authRoutes);
 
+const trendingRoutes = require('./routes/trendingRoutes');
+app.use('/api/trending', trendingRoutes);
+
+const moviesRoutes = require('./routes/searchRoutes');
+app.use('/api', moviesRoutes);
+
+const detailsRoutes = require('./routes/detailsRoutes');
+app.use('/api/details', detailsRoutes);
+
 app.listen(port, () => console.log(`Server running on port ${port}`));
