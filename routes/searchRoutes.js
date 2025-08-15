@@ -1,9 +1,8 @@
 const express = require("express");
-const { searchMovies, searchTVShows } = require('../controllers/searchController');
+const { searchTMDB } = require('../controllers/searchController');
 
 const router = express.Router();
 
-router.get("/search/movies", searchMovies);
-router.get("/search/tvShows", searchTVShows);
+router.get("/search", searchTMDB);
 
 module.exports = router;
