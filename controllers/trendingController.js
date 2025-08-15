@@ -2,11 +2,11 @@ const axios = require("axios");
 
 const getTrending = async (req, res) => {
   const { type } = req.params; 
-  
+
   try {
     const response = await axios.get(
       `https://api.themoviedb.org/3/trending/${type}/day`,
-      { params: { api_key: process.env.VITE_API_TMDB_KEY } }
+      { params: { api_key: process.env.API_TMDB_KEY } }
     );
 
     const topFive = response.data.results.slice(0, 5);
