@@ -3,6 +3,9 @@ const { searchTMDB } = require('../controllers/searchController');
 
 const router = express.Router();
 
-router.get("/search", searchTMDB);
+const authorizeRoles = require("../middleware/authorize");
+
+
+router.get("/search", authorizeRoles("USER"), searchTMDB);
 
 module.exports = router;

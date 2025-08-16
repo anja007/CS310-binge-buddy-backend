@@ -6,13 +6,15 @@ const {
     removeFromList
 } = require("../controllers/contentController");
 
-router.get("/:id/watchlist", getContentForUser("watchlist"));
-router.get("/:id/watched", getContentForUser("watched"));
+const authorizeRoles = require("../middleware/authorize");
 
-router.post("/:id/watchlist", addToList);
-router.post("/:id/watched", addToList);
+router.get("/:id/watchlist", authorizeRoles("USER", "ADMIN"), getContentForUser("watchlist"));
+router.get("/:id/watched",  authorizeRoles("USER", "ADMIN"), getContentForUser("watched"));
 
-router.delete("/:id/watchlist/:itemId", removeFromList("watchlist", "watchlistId"));
-router.delete("/:id/watched/:itemId", removeFromList("watched", "watchedId"));
+router.post("/:id/watchlist", authorizeRoles("USER"), addToList);
+router.post("/:id/watched", authorizeRoles("USER"), addToList);
+
+router.delete("/:id/watchlist/:itemId", authorizeRoles("USER"), removeFromList("watchlist", "watchlistId"));
+router.delete("/:id/watched/:itemId", authorizeRoles("USER"), removeFromList("watched", "watchedId"));
 
 module.exports = router;

@@ -3,6 +3,8 @@ const { getDetails } = require('../controllers/detailsController');
 
 const router = express.Router();
 
-router.get("/:type/:id", getDetails);
+const authorizeRoles = require("../middleware/authorize");
+
+router.get("/:type/:id", authorizeRoles("USER"), getDetails);
 
 module.exports = router;
