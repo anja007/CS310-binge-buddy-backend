@@ -20,8 +20,6 @@ const getContentForUser = (tableName) => {
 };*/const getContentForUser = (tableName) => {
     return async (req, res) => {
         try {
-            // Ako koristiš authenticateToken middleware,
-            // pretpostavljamo da je userId ubačen u req.user
             const userId = parseInt(req.params.id, 10);
             console.log(userId);
             if (!userId) {

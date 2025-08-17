@@ -72,7 +72,6 @@ const getRecordById = (tableName, idColumn, idValue) => {
 
 const getRecordByIdSorting = (tableName, idColumn, idValue, sortBy = "addedAt", order = "ASC") => {
   return new Promise((resolve, reject) => {
-    // dozvoljene kolone za sortiranje
     const validColumns = ["addedAt", "title", "voteAverage"];
     const validOrder = ["ASC", "DESC"];
 
@@ -83,7 +82,7 @@ const getRecordByIdSorting = (tableName, idColumn, idValue, sortBy = "addedAt", 
 
     pool.query(query, [idValue], (err, results) => {
       if (err) {
-        console.error("SQL Error:", err); // loguj grešku
+        console.error("SQL Error:", err); 
         reject(err);
       } else {
         resolve(results);
@@ -91,8 +90,6 @@ const getRecordByIdSorting = (tableName, idColumn, idValue, sortBy = "addedAt", 
     });
   });
 };
-
-
 
 module.exports = {
   getAllRecords,
