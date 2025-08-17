@@ -1,4 +1,4 @@
-import fetch from "node-fetch";
+import axios from "axios";
 
 const searchTMDBCombined = async (req, res) => {
   const query = req.query.q;
@@ -10,8 +10,10 @@ const searchTMDBCombined = async (req, res) => {
     const movieUrl = `${process.env.API_TMDB_BASE_URL}/search/movie?api_key=${process.env.API_TMDB_KEY}&language=en-US&page=${page}&include_adult=false&query=${encodeURIComponent(query)}`;
     const tvUrl = `${process.env.API_TMDB_BASE_URL}/search/tv?api_key=${process.env.API_TMDB_KEY}&language=en-US&page=${page}&include_adult=false&query=${encodeURIComponent(query)}`;
 
-    const [movieRes, tvRes] = await Promise.all([fetch(movieUrl), fetch(tvUrl)]);
-    const [movieData, tvData] = await Promise.all([movieRes.json(), tvRes.json()]);
+    const [movieRes, tvRes] = await Promise.all([axios.get(movieUrl), axios.get(tvUrl)]);
+
+    const movieData = movieRes.data;
+    const tvData = tvRes.data;
 
     const movieResults = (movieData.results || []).map(item => ({ ...item, media_type: "movie" }));
     const tvResults = (tvData.results || []).map(item => ({ ...item, media_type: "tv" }));
@@ -30,8 +32,13 @@ const searchTMDBCombined = async (req, res) => {
 
   } catch (error) {
     console.error("Error fetching combined results:", error);
+
+    if (error.response) {
+      return res.status(error.response.status).json({ error: error.response.data.status_message || "TMDB API error" });
+    }
+
     res.status(500).json({ error: "Failed to fetch combined results" });
   }
 };
 
-export { searchTMDBCombined }
+export { searchTMDBCombined };
