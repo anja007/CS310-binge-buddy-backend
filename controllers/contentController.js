@@ -2,26 +2,13 @@ const db = require("../db/db");
 const {
     insertRecord,
     deleteRecord,
-    getRecordById,
     getRecordByIdSorting
 } = require('../utils/sqlFunctions');
-/*
-const getContentForUser = (tableName) => {
-    return async (req, res) => {
-        const userId = parseInt(req.params.id, 10);
 
-        try {
-            const rows = await getRecordById(tableName, "userId", userId);
-            res.json(rows);
-        } catch (error) {
-            res.status(500).json({ message: "Server error", error });
-        }
-    };
-};*/const getContentForUser = (tableName) => {
+const getContentForUser = (tableName) => {
     return async (req, res) => {
         try {
             const userId = parseInt(req.params.id, 10);
-            console.log(userId);
             if (!userId) {
                 return res.status(400).json({ error: "User ID not found" });
             }
