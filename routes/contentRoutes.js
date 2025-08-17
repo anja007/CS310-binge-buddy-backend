@@ -9,13 +9,15 @@ const {
 const authenticateToken = require('../middleware/authenticate');
 const authorizeRoles = require("../middleware/authorize");
 
-router.get("/:id/watchlist", authenticateToken, authorizeRoles("USER", "ADMIN"), getContentForUser("watchlist"));
-router.get("/:id/watched",  authenticateToken, authorizeRoles("USER", "ADMIN"), getContentForUser("watched"));
+router.use(authenticateToken, authorizeRoles("USER"));
 
-router.post("/:id/watchlist", authenticateToken, authorizeRoles("USER"), addToList);
-router.post("/:id/watched", authenticateToken, authorizeRoles("USER"), addToList);
+router.get("/:id/watchlist", getContentForUser("watchlist"));
+router.get("/:id/watched",  getContentForUser("watched"));
 
-router.delete("/:id/watchlist/:itemId", authenticateToken, authorizeRoles("USER"), removeFromList("watchlist", "watchlistId"));
-router.delete("/:id/watched/:itemId", authenticateToken, authorizeRoles("USER"), removeFromList("watched", "watchedId"));
+router.post("/:id/watchlist", addToList);
+router.post("/:id/watched", addToList);
+
+router.delete("/:id/watchlist/:itemId", removeFromList("watchlist", "watchlistId"));
+router.delete("/:id/watched/:itemId", removeFromList("watched", "watchedId"));
 
 module.exports = router;
