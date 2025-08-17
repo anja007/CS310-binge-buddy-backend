@@ -70,6 +70,28 @@ const getRecordById = (tableName, idColumn, idValue) => {
   });
 };
 
+const getRecordByIdSorting = (tableName, idColumn, idValue, sortBy = "addedAt", order = "ASC") => {
+  return new Promise((resolve, reject) => {
+    // dozvoljene kolone za sortiranje
+    const validColumns = ["addedAt", "title", "voteAverage"];
+    const validOrder = ["ASC", "DESC"];
+
+    const column = validColumns.includes(sortBy) ? sortBy : "addedAt";
+    const sortOrder = validOrder.includes(order.toUpperCase()) ? order.toUpperCase() : "ASC";
+
+    const query = `SELECT * FROM ${tableName} WHERE ${idColumn} = ? ORDER BY ${column} ${sortOrder}`;
+
+    pool.query(query, [idValue], (err, results) => {
+      if (err) {
+        console.error("SQL Error:", err); // loguj grešku
+        reject(err);
+      } else {
+        resolve(results);
+      }
+    });
+  });
+};
+
 
 
 module.exports = {
@@ -78,5 +100,6 @@ module.exports = {
   insertRecord,
   updateRecord, 
   deleteRecord,
-  getRecordById
+  getRecordById,
+  getRecordByIdSorting
 };

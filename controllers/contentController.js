@@ -2,9 +2,10 @@ const db = require("../db/db");
 const {
     insertRecord,
     deleteRecord,
-    getRecordById
+    getRecordById,
+    getRecordByIdSorting
 } = require('../utils/sqlFunctions');
-
+/*
 const getContentForUser = (tableName) => {
     return async (req, res) => {
         const userId = parseInt(req.params.id, 10);
@@ -16,7 +17,30 @@ const getContentForUser = (tableName) => {
             res.status(500).json({ message: "Server error", error });
         }
     };
+};*/const getContentForUser = (tableName) => {
+    return async (req, res) => {
+        try {
+            // Ako koristiš authenticateToken middleware,
+            // pretpostavljamo da je userId ubačen u req.user
+            const userId = parseInt(req.params.id, 10);
+            console.log(userId);
+            if (!userId) {
+                return res.status(400).json({ error: "User ID not found" });
+            }
+
+            const sortBy = req.query.sortBy || "addedAt";
+            const order = req.query.order?.toUpperCase() === "DESC" ? "DESC" : "ASC";
+
+            const rows = await getRecordByIdSorting(tableName, "userId", userId, sortBy, order);
+            res.json(rows);
+
+        } catch (error) {
+            console.error("Error in getContentForUser:", error);
+            res.status(500).json({ message: "Server error", error });
+        }
+    };
 };
+
 
 const addToList = async (req, res) => {
   const userId = req.params.id;
