@@ -13,8 +13,10 @@ router.get("/all", authenticateToken, authorizeRoles("ADMIN", "USER"), getFeatur
 
 router.post("/add", authenticateToken, authorizeRoles("ADMIN"), addFeatured);
 
+//tmdb id
 router.put("/:id", authenticateToken, authorizeRoles("ADMIN"), updateFeatured);
 
+//featured id
 router.delete("/:id", authenticateToken, authorizeRoles("ADMIN"), deleteFeatured);
 
 module.exports = router;
