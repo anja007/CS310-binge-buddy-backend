@@ -32,4 +32,7 @@ app.use('/api/content', contentRoutes);
 const featuredRoutes = require('./routes/featuredRoutes');
 app.use('/api/featured', featuredRoutes);
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/users', userRoutes);
+
 app.listen(port, () => console.log(`Server running on port ${port}`));
