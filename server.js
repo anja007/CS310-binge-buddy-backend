@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const port = process.env.PORT || 3000;
 
+
 const app = express();
 
 app.use(cors());
@@ -30,5 +31,6 @@ app.use('/api/content', contentRoutes);
 
 const featuredRoutes = require('./routes/featuredRoutes');
 app.use('/api/featured', featuredRoutes);
+
 
 app.listen(port, () => console.log(`Server running on port ${port}`));
