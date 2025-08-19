@@ -32,4 +32,37 @@ const loginValidation = data => {
     return schema.validate(data);
 };
 
-module.exports = { registerValidation, loginValidation}
+const addToListValidation = (data) => {
+  const schema = Joi.object({
+    tmdbId: Joi.number().required(),
+    media_type: Joi.string().valid("movie", "tv").required(),
+    title: Joi.string().required(),
+    posterPath: Joi.string().required()
+  });
+
+  return schema.validate(data);
+};
+
+const addFeaturedValidation = (data) => {
+  const schema = Joi.object({
+    title: Joi.string().required(),
+    mediaType: Joi.string().valid("movie", "tv").required(),
+    listName: Joi.string().required()
+  });
+
+  return schema.validate(data);
+};
+
+const updateFeaturedValidation = (data) => {
+  const schema = Joi.object({
+    listName: Joi.string().required()
+  });
+
+  return schema.validate(data);
+};
+
+module.exports = { registerValidation, 
+                   loginValidation, 
+                   addToListValidation, 
+                   addFeaturedValidation, 
+                   updateFeaturedValidation}
