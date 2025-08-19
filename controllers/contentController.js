@@ -5,6 +5,8 @@ const {
     getRecordByIdSorting
 } = require('../utils/sqlFunctions');
 
+const { addToListValidation } = require("../validation/validation");
+
 const getContentForUser = (tableName) => {
     return async (req, res) => {
         try {
@@ -31,9 +33,9 @@ const addToList = async (req, res) => {
   const userId = req.params.id;
   const { media_type, tmdbId } = req.body;
 
-  if (!media_type) {
-    return res.status(400).json({ error: "media_type is required" });
-  }
+  const { error } = addToListValidation(req.body);
+  if (error) return res.status(400).json({ error: error.details[0].message });
+
 
    const table = req.path.includes("watchlist") ? "watchlist" : "watched";
 
