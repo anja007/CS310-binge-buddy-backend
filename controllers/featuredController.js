@@ -6,6 +6,8 @@ const {
   deleteRecord
 } = require("../utils/sqlFunctions");
 
+const { addFeaturedValidation, updateFeaturedValidation } = require('../validation/validation');
+
 const getFeatured = async (req, res) => {
   try {
     const rows = await getAllRecords("featured");
@@ -13,7 +15,7 @@ const getFeatured = async (req, res) => {
 
     for (const item of rows) {
       const url = `https://api.themoviedb.org/3/${item.mediaType}/${item.tmdbId}?api_key=${process.env.API_TMDB_KEY}&language=en-US`;
-      const { data } = await axios.get(url); 
+      const { data } = await axios.get(url);
 
       featuredData.push({
         featuredId: item.featuredId,
@@ -35,13 +37,12 @@ const getFeatured = async (req, res) => {
 };
 
 const addFeatured = async (req, res) => {
+  const { error } = addFeaturedValidation(req.body);
+  if (error) return res.status(400).json({ message: error.details[0].message });
+
+  const { title, mediaType, listName } = req.body;
+  
   try {
-    const { title, mediaType, listName } = req.body;
-
-    if (!title || !mediaType) {
-      return res.status(400).json({ message: "Title and mediaType are required!" });
-    }
-
     const searchUrl = `https://api.themoviedb.org/3/search/${mediaType}?api_key=${process.env.API_TMDB_KEY}&query=${encodeURIComponent(title)}`;
     const tmdbRes = await axios.get(searchUrl);
 
@@ -64,7 +65,7 @@ const addFeatured = async (req, res) => {
     await insertRecord("featured", { tmdbId, title, mediaType, listName });
 
     res.status(201).json({ message: "Featured item added", tmdbId });
-    
+
   } catch (err) {
     console.error("Error:", err);
     res.status(500).json({ message: "Error while adding featured item", error: err.message || err });
@@ -72,17 +73,20 @@ const addFeatured = async (req, res) => {
 };
 
 const updateFeatured = async (req, res) => {
-    const { id } = req.params;
-    const { listName } = req.body;
+  const { error } = updateFeaturedValidation(req.body);
+  if (error) return res.status(400).json({ message: error.details[0].message });
 
-    try {
-        await updateRecord("featured", "featuredId", id, {listName });
-        res.json({ message: "Featured updated" });
+  const { id } = req.params;
+  const { listName } = req.body;
+  
+  try {
+    await updateRecord("featured", "featuredId", id, { listName });
+    res.json({ message: "Featured updated" });
 
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error", error: error.message });
-    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
 
 const deleteFeatured = async (req, res) => {
